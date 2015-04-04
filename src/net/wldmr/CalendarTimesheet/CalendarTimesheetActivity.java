@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import android.util.Log;
+
 public class CalendarTimesheetActivity extends Activity
 {
     /** Called when the activity is first created. */
@@ -21,10 +23,35 @@ public class CalendarTimesheetActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        String[] dummyItems = {"One, potato", "Two, potato"};
+        Cursor cur = queryCalendars();
+        String[] items = new String[cur.getCount()];
+
+        // Use the cursor to step through the returned records
+        Log.d("CalendarTimesheetActivity", "Iterating over calendars");
+        while (cur.moveToNext()) {
+            long calID = 0;
+            String displayName = null;
+            String accountName = null;
+            String ownerName = null;
+
+            // Get the field values
+            calID = cur.getLong(Columns.id.index);
+            displayName = cur.getString(Columns.display_name.index);
+            accountName = cur.getString(Columns.account_name.index);
+            ownerName = cur.getString(Columns.owner_account.index);
+
+            Log.d("CalendarTimesheetActivity", "calID = " + calID);
+            Log.d("CalendarTimesheetActivity", "  displayName = " + displayName);
+            Log.d("CalendarTimesheetActivity", "  accountName = " + accountName);
+            Log.d("CalendarTimesheetActivity", "  ownerName   = " + ownerName);
+
+            int pos = cur.getPosition();
+            items[pos] = displayName;
+
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        R.layout.calendar_list_item, dummyItems);
+        R.layout.calendar_list_item, items);
 
         ListView listView = (ListView) findViewById(R.id.calendar_list);
         listView.setAdapter(adapter);
@@ -67,8 +94,10 @@ public class CalendarTimesheetActivity extends Activity
         String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND (" 
                                 + Calendars.ACCOUNT_TYPE + " = ?) AND ("
                                 + Calendars.OWNER_ACCOUNT + " = ?))";
+        selection = null;
         String[] selectionArgs = new String[] {"sampleuser@gmail.com", "com.google",
                 "sampleuser@gmail.com"};
+        selectionArgs = null;
         // Submit the query and get a Cursor object back. 
         cur = cr.query(uri, Columns.names, selection, selectionArgs, null);
         return cur;
