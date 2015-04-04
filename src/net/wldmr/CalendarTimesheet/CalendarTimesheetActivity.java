@@ -21,6 +21,8 @@ import android.util.Log;
 
 public class CalendarTimesheetActivity extends Activity
 {
+    private Cursor cur;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -28,7 +30,7 @@ public class CalendarTimesheetActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Cursor cur = queryCalendars();
+        cur = queryCalendars();
         String[] items = new String[cur.getCount()];
 
         // Use the cursor to step through the returned records
@@ -71,7 +73,8 @@ public class CalendarTimesheetActivity extends Activity
         account_name (Calendars.ACCOUNT_NAME, 1),
         display_name (Calendars.CALENDAR_DISPLAY_NAME, 2),
         owner_account (Calendars.OWNER_ACCOUNT, 3),
-        access_level (Calendars.CALENDAR_ACCESS_LEVEL, 4);
+        access_level (Calendars.CALENDAR_ACCESS_LEVEL, 4),
+        color (Calendars.CALENDAR_COLOR, 5);
 
         public final String name;
         public final int index;
@@ -115,7 +118,11 @@ public class CalendarTimesheetActivity extends Activity
         public void onItemClick(AdapterView parent, View v, int position, long id)
         {
             // Display a messagebox.
-            Toast.makeText(getApplicationContext(), "You've got an event", Toast.LENGTH_SHORT).show();
+            cur.moveToPosition(position);
+            String s = cur.getString(Columns.color.index);
+            Toast.makeText(getApplicationContext(), "Item: " + s, Toast.LENGTH_SHORT).show();
+
+            // TODO: Insert event that extends one hour into the future.
         }
     };
 
