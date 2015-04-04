@@ -12,6 +12,11 @@ import android.database.Cursor;
 import android.content.ContentResolver;
 import android.net.Uri;
 
+import android.widget.AdapterView;
+import android.view.View;
+
+import android.widget.Toast;
+
 import android.util.Log;
 
 public class CalendarTimesheetActivity extends Activity
@@ -55,6 +60,8 @@ public class CalendarTimesheetActivity extends Activity
 
         ListView listView = (ListView) findViewById(R.id.calendar_list);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(mMessageClickedHandler); 
     }
 
     // Projection array. Creating indices for this array instead of doing
@@ -101,4 +108,15 @@ public class CalendarTimesheetActivity extends Activity
         cur = cr.query(uri, Columns.names, selection, selectionArgs, null);
         return cur;
     }
+
+
+    // Create a message handling object as an anonymous class.
+    private AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView parent, View v, int position, long id)
+        {
+            // Display a messagebox.
+            Toast.makeText(getApplicationContext(), "You've got an event", Toast.LENGTH_SHORT).show();
+        }
+    };
+
 }
