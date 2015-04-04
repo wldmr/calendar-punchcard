@@ -63,7 +63,8 @@ public class CalendarTimesheetActivity extends Activity
         id (Calendars._ID, 0),
         account_name (Calendars.ACCOUNT_NAME, 1),
         display_name (Calendars.CALENDAR_DISPLAY_NAME, 2),
-        owner_account (Calendars.OWNER_ACCOUNT, 3);
+        owner_account (Calendars.OWNER_ACCOUNT, 3),
+        access_level (Calendars.CALENDAR_ACCESS_LEVEL, 4);
 
         public final String name;
         public final int index;
@@ -91,13 +92,11 @@ public class CalendarTimesheetActivity extends Activity
         Cursor cur = null;
         ContentResolver cr = getContentResolver();
         Uri uri = Calendars.CONTENT_URI;
-        String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND (" 
-                                + Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                                + Calendars.OWNER_ACCOUNT + " = ?))";
-        selection = null;
-        String[] selectionArgs = new String[] {"sampleuser@gmail.com", "com.google",
-                "sampleuser@gmail.com"};
-        selectionArgs = null;
+
+        String selection = "(" + Columns.access_level.name + " = ?)";
+
+        String[] selectionArgs = new String[] {String.valueOf(Calendars.CAL_ACCESS_OWNER)};
+
         // Submit the query and get a Cursor object back. 
         cur = cr.query(uri, Columns.names, selection, selectionArgs, null);
         return cur;
