@@ -42,10 +42,10 @@ public class CalendarTimesheetActivity extends Activity
             String ownerName = null;
 
             // Get the field values
-            calID = cur.getLong(Columns.id.index);
-            displayName = cur.getString(Columns.display_name.index);
-            accountName = cur.getString(Columns.account_name.index);
-            ownerName = cur.getString(Columns.owner_account.index);
+            calID = cur.getLong(Columns.id.ordinal());
+            displayName = cur.getString(Columns.display_name.ordinal());
+            accountName = cur.getString(Columns.account_name.ordinal());
+            ownerName = cur.getString(Columns.owner_account.ordinal());
 
             Log.d("CalendarTimesheetActivity", "calID = " + calID);
             Log.d("CalendarTimesheetActivity", "  displayName = " + displayName);
@@ -69,30 +69,30 @@ public class CalendarTimesheetActivity extends Activity
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     private enum Columns {
-        id (Calendars._ID, 0),
-        account_name (Calendars.ACCOUNT_NAME, 1),
-        display_name (Calendars.CALENDAR_DISPLAY_NAME, 2),
-        owner_account (Calendars.OWNER_ACCOUNT, 3),
-        access_level (Calendars.CALENDAR_ACCESS_LEVEL, 4),
-        color (Calendars.CALENDAR_COLOR, 5);
+        id (Calendars._ID),
+        account_name (Calendars.ACCOUNT_NAME),
+        display_name (Calendars.CALENDAR_DISPLAY_NAME),
+        owner_account (Calendars.OWNER_ACCOUNT),
+        access_level (Calendars.CALENDAR_ACCESS_LEVEL),
+        color (Calendars.CALENDAR_COLOR);
 
-        public final String name;
-        public final int index;
+        private final String column_string;
 
         public static final String[] names = new String[Columns.values().length];
-        public static final int[] indices = new int[Columns.values().length];
 
         static {
             Columns[] cols = Columns.values();
             for (int i=0; i<cols.length; i++) {
-                names[i] = cols[i].name;
-                indices[i] = cols[i].index;
+                names[i] = cols[i].toString();
             }
         }
 
-        Columns(String name, int index) {
-            this.name = name;
-            this.index = index;
+        Columns(String column_string) {
+            this.column_string = column_string;
+        }
+
+        public String toString() {
+            return column_string;
         }
 
     }
@@ -103,7 +103,7 @@ public class CalendarTimesheetActivity extends Activity
         ContentResolver cr = getContentResolver();
         Uri uri = Calendars.CONTENT_URI;
 
-        String selection = "(" + Columns.access_level.name + " = ?)";
+        String selection = "(" + Columns.access_level + " = ?)";
 
         String[] selectionArgs = new String[] {String.valueOf(Calendars.CAL_ACCESS_OWNER)};
 
@@ -119,7 +119,7 @@ public class CalendarTimesheetActivity extends Activity
         {
             // Display a messagebox.
             cur.moveToPosition(position);
-            String s = cur.getString(Columns.color.index);
+            String s = cur.getString(Columns.color.ordinal());
             Toast.makeText(getApplicationContext(), "Item: " + s, Toast.LENGTH_SHORT).show();
 
             // TODO: Insert event that extends one hour into the future.
