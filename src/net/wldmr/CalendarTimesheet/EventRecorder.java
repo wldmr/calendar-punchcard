@@ -1,6 +1,8 @@
 package net.wldmr.CalendarTimesheet;
 
 import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.Locale;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -15,6 +17,7 @@ class EventRecorder {
         long startMillis = 0;
         long endMillis = 0;
         int defaultLength = 1; // hour
+        String timezone = TimeZone.getDefault().getDisplayName(Locale.getDefault());
 
         Calendar beginTime = Calendar.getInstance();
         Calendar endTime = (Calendar) beginTime.clone();
@@ -29,7 +32,7 @@ class EventRecorder {
         values.put(CalendarContract.Events.TITLE, "");
         values.put(CalendarContract.Events.DESCRIPTION, "");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, "America/Los_Angeles");
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, timezone);
 
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
