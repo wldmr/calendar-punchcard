@@ -119,10 +119,14 @@ public class CalendarTimesheetActivity extends Activity
         {
             // Display a messagebox.
             cur.moveToPosition(position);
-            String s = cur.getString(Columns.color.ordinal());
-            Toast.makeText(getApplicationContext(), "Item: " + s, Toast.LENGTH_SHORT).show();
 
-            // TODO: Insert event that extends one hour into the future.
+            String s = cur.getString(Columns.display_name.ordinal());
+            long CalendarID = cur.getLong(Columns.id.ordinal());
+
+            ContentResolver cr = getContentResolver();
+            EventRecorder.startEvent(cr, CalendarID);
+
+            Toast.makeText(getApplicationContext(), "Added event to " + s, Toast.LENGTH_SHORT).show();
         }
     };
 
