@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import android.database.Cursor;
 
-import android.content.Intent;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 
@@ -86,12 +85,15 @@ class EventRecorder {
         //
     }
 
-    static Intent createEditIntent(Uri event) {
-        long endTime = Calendar.getInstance().getTimeInMillis();
-        Intent intent = new Intent(Intent.ACTION_EDIT)
-            .setData(event)
-            .putExtra(Events.DTEND, endTime);
-        return intent;
+    static void updateEndTime(ContentResolver cr, Uri event) {
+        long endMillis = Calendar.getInstance().getTimeInMillis();
+        updateEndTime(cr, event, endMillis);
+    }
+
+    static void updateEndTime(ContentResolver cr, Uri event, long endMillis) {
+        ContentValues values = new ContentValues();
+        values.put(Events.DTEND, endMillis); 
+        cr.update(event, values, null, null);
     }
 
 }

@@ -131,7 +131,15 @@ public class CalendarTimesheetActivity extends Activity
                 EventRecorder.startEvent(cr, CalendarID);
             } else {
                 Toast.makeText(getApplicationContext(), "Ending event in " + s, Toast.LENGTH_SHORT).show();
-                Intent intent = EventRecorder.createEditIntent(event);
+                EventRecorder.updateEndTime(cr, event);
+
+                // Start an activity to review the event.
+                // FIXME: I'd like to use ACTION_EDIT, but that does not, in 
+                // fact, open an activity that lets me edit the event at all.
+                // See <https://code.google.com/p/android/issues/detail?id=39402>,
+                // where this issue is addressed, but also marked as 
+                // "obsolete", whatever that means.
+                Intent intent = new Intent(Intent.ACTION_VIEW).setData(event);
                 startActivity(intent);
             }
 
