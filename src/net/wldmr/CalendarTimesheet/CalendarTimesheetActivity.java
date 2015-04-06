@@ -10,6 +10,7 @@ import android.provider.CalendarContract.Calendars;
 
 import android.database.Cursor;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.net.Uri;
 
 import android.widget.AdapterView;
@@ -124,9 +125,16 @@ public class CalendarTimesheetActivity extends Activity
             long CalendarID = cur.getLong(Columns.id.ordinal());
 
             ContentResolver cr = getContentResolver();
-            EventRecorder.startEvent(cr, CalendarID);
+            Uri event = EventRecorder.getRecordingEvent(cr, CalendarID);
+            if (event == null) {
+                Toast.makeText(getApplicationContext(), "Starting event in " + s, Toast.LENGTH_SHORT).show();
+                EventRecorder.startEvent(cr, CalendarID);
+            } else {
+                Toast.makeText(getApplicationContext(), "Ending event in " + s, Toast.LENGTH_SHORT).show();
+                Intent intent = EventRecorder.createEditIntent(event);
+                startActivity(intent);
+            }
 
-            Toast.makeText(getApplicationContext(), "Added event to " + s, Toast.LENGTH_SHORT).show();
         }
     };
 
