@@ -60,7 +60,7 @@ public class CalendarTimesheetActivity extends Activity
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        R.layout.calendar_list_item, items);
+        android.R.layout.simple_list_item_1, items);
 
         ListView listView = (ListView) findViewById(R.id.calendar_list);
         listView.setAdapter(adapter);
