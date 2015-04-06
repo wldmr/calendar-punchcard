@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.widget.Toast;
 import android.util.Log;
 
-public class EventEndedReceiver extends BroadcastReceiver {
+public class CalendarReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "Intent: " + intent, Toast.LENGTH_LONG).show();
-        Log.d("EventEndedReceiver", "Can I see the end from: " + intent);
+        Log.d("CalendarReceiver", "Can I see the end from: " + intent);
     }
 }

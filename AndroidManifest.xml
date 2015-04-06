@@ -18,7 +18,7 @@
 
         <receiver android:enabled="true"
                   android:exported="true"
-                  android:name=".EventEndedReceiver"
+                  android:name=".CalendarReceiver"
                   >
         <intent-filter>
             <action android:name="android.intent.action.PROVIDER_CHANGED" />
