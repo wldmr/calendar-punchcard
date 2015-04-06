@@ -16,12 +16,13 @@ class EventRecorder {
     static void startEvent(ContentResolver cr, long calID) {
         long startMillis = 0;
         long endMillis = 0;
-        int defaultLength = 1; // hour
+        int defaultIntervalType = Calendar.MINUTE;
+        int defaultIntervalLength = 1;
         String timezone = TimeZone.getDefault().getDisplayName(Locale.getDefault());
 
         Calendar beginTime = Calendar.getInstance();
         Calendar endTime = (Calendar) beginTime.clone();
-        endTime.add(Calendar.HOUR, defaultLength);
+        endTime.add(defaultIntervalType, defaultIntervalLength);
 
         startMillis = beginTime.getTimeInMillis();
         endMillis = endTime.getTimeInMillis();
