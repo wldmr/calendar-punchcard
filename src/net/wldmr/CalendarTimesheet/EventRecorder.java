@@ -19,7 +19,7 @@ import android.net.Uri;
 class EventRecorder {
 
     private static Cursor eventCursor = null;
-    private static final String defaultEventName = "";
+    private static final String defaultEventName = ".";
 
     /** Is there an event in the specified calendar that hasn't been finished yet?
      *
@@ -71,7 +71,7 @@ class EventRecorder {
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "");
+        values.put(CalendarContract.Events.TITLE, defaultEventName);
         values.put(CalendarContract.Events.DESCRIPTION, "");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, timezone);
