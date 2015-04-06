@@ -1,8 +1,11 @@
 # Requires the android tools and platform-tools to be in the PATH
 # Use ". bashrc" for that.
 
-debug_install:
-	ant debug install
+install:
+	ant -emacs debug install
+
+debug:
+	ant -emacs debug
 
 emulator:
-	emulator @GalaxyS2 -gpu on -qemu -enable-kvm &
+	emulator @GalaxyS2 -timezone "Europe/Berlin" -gpu on -qemu -enable-kvm &
