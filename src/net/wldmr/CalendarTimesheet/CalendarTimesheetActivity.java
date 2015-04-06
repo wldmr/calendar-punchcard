@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import android.widget.ListView;
-import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 
 import android.provider.CalendarContract.Calendars;
 
@@ -35,33 +35,15 @@ public class CalendarTimesheetActivity extends Activity
         cur = EventRecorder.queryCalendars(cr);
         String[] items = new String[cur.getCount()];
 
-        // Use the cursor to step through the returned records
-        Log.d("CalendarTimesheetActivity", "Iterating over calendars");
-        while (cur.moveToNext()) {
-            long calID = 0;
-            String displayName = null;
-            String accountName = null;
-            String ownerName = null;
+        String[] fromColumns = {
+            Calendars.CALENDAR_DISPLAY_NAME,
+        };
+        int[] toViews = {
+            R.id.display_name,
+        };
 
-            // Get the field values
-            calID = cur.getLong(EventRecorder.CalendarColumns.id.ordinal());
-            displayName = cur.getString(EventRecorder.CalendarColumns.display_name.ordinal());
-            accountName = cur.getString(EventRecorder.CalendarColumns.account_name.ordinal());
-            ownerName = cur.getString(EventRecorder.CalendarColumns.owner_account.ordinal());
-
-            Log.d("CalendarTimesheetActivity", "calID = " + calID);
-            Log.d("CalendarTimesheetActivity", "  displayName = " + displayName);
-            Log.d("CalendarTimesheetActivity", "  accountName = " + accountName);
-            Log.d("CalendarTimesheetActivity", "  ownerName   = " + ownerName);
-
-            int pos = cur.getPosition();
-            items[pos] = displayName;
-
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-        android.R.layout.simple_list_item_1, items);
-
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+                R.layout.calendar_list_item, cur, fromColumns, toViews, 0);
         ListView listView = (ListView) findViewById(R.id.calendar_list);
         listView.setAdapter(adapter);
 
