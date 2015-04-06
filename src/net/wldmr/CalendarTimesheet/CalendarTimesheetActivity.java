@@ -31,7 +31,8 @@ public class CalendarTimesheetActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        cur = queryCalendars();
+        ContentResolver cr = getContentResolver();
+        cur = EventRecorder.queryCalendars(cr);
         String[] items = new String[cur.getCount()];
 
         // Use the cursor to step through the returned records
@@ -43,10 +44,10 @@ public class CalendarTimesheetActivity extends Activity
             String ownerName = null;
 
             // Get the field values
-            calID = cur.getLong(Columns.id.ordinal());
-            displayName = cur.getString(Columns.display_name.ordinal());
-            accountName = cur.getString(Columns.account_name.ordinal());
-            ownerName = cur.getString(Columns.owner_account.ordinal());
+            calID = cur.getLong(EventRecorder.CalendarColumns.id.ordinal());
+            displayName = cur.getString(EventRecorder.CalendarColumns.display_name.ordinal());
+            accountName = cur.getString(EventRecorder.CalendarColumns.account_name.ordinal());
+            ownerName = cur.getString(EventRecorder.CalendarColumns.owner_account.ordinal());
 
             Log.d("CalendarTimesheetActivity", "calID = " + calID);
             Log.d("CalendarTimesheetActivity", "  displayName = " + displayName);
@@ -67,53 +68,6 @@ public class CalendarTimesheetActivity extends Activity
         listView.setOnItemClickListener(mMessageClickedHandler); 
     }
 
-    // Projection array. Creating indices for this array instead of doing
-    // dynamic lookups improves performance.
-    private enum Columns {
-        id (Calendars._ID),
-        account_name (Calendars.ACCOUNT_NAME),
-        display_name (Calendars.CALENDAR_DISPLAY_NAME),
-        owner_account (Calendars.OWNER_ACCOUNT),
-        access_level (Calendars.CALENDAR_ACCESS_LEVEL),
-        color (Calendars.CALENDAR_COLOR);
-
-        private final String column_string;
-
-        public static final String[] names = new String[Columns.values().length];
-
-        static {
-            Columns[] cols = Columns.values();
-            for (int i=0; i<cols.length; i++) {
-                names[i] = cols[i].toString();
-            }
-        }
-
-        Columns(String column_string) {
-            this.column_string = column_string;
-        }
-
-        public String toString() {
-            return column_string;
-        }
-
-    }
-
-    public Cursor queryCalendars() {
-        // Run query
-        Cursor cur = null;
-        ContentResolver cr = getContentResolver();
-        Uri uri = Calendars.CONTENT_URI;
-
-        String selection = "(" + Columns.access_level + " = ?)";
-
-        String[] selectionArgs = new String[] {String.valueOf(Calendars.CAL_ACCESS_OWNER)};
-
-        // Submit the query and get a Cursor object back. 
-        cur = cr.query(uri, Columns.names, selection, selectionArgs, null);
-        return cur;
-    }
-
-
     // Create a message handling object as an anonymous class.
     private AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView parent, View v, int position, long id)
@@ -121,8 +75,8 @@ public class CalendarTimesheetActivity extends Activity
             // Display a messagebox.
             cur.moveToPosition(position);
 
-            String s = cur.getString(Columns.display_name.ordinal());
-            long CalendarID = cur.getLong(Columns.id.ordinal());
+            String s = cur.getString(EventRecorder.CalendarColumns.display_name.ordinal());
+            long CalendarID = cur.getLong(EventRecorder.CalendarColumns.id.ordinal());
 
             ContentResolver cr = getContentResolver();
             Uri event = EventRecorder.getRecordingEvent(cr, CalendarID);

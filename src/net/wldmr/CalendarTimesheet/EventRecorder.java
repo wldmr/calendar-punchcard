@@ -19,6 +19,52 @@ class EventRecorder {
 
     private static Cursor eventCursor = null;
     private static final String defaultEventName = ".";
+    
+    // Projection array. Creating indices for this array instead of doing
+    // dynamic lookups improves performance.
+    static enum CalendarColumns {
+        id (Calendars._ID),
+        account_name (Calendars.ACCOUNT_NAME),
+        display_name (Calendars.CALENDAR_DISPLAY_NAME),
+        owner_account (Calendars.OWNER_ACCOUNT),
+        access_level (Calendars.CALENDAR_ACCESS_LEVEL),
+        color (Calendars.CALENDAR_COLOR);
+
+        private final String column_string;
+
+        public static final String[] names = new String[CalendarColumns.values().length];
+
+        static {
+            CalendarColumns[] cols = CalendarColumns.values();
+            for (int i=0; i<cols.length; i++) {
+                names[i] = cols[i].toString();
+            }
+        }
+
+        CalendarColumns(String column_string) {
+            this.column_string = column_string;
+        }
+
+        public String toString() {
+            return column_string;
+        }
+
+    }
+
+    static Cursor queryCalendars(ContentResolver cr) {
+        // Run query
+        Cursor cur = null;
+        Uri uri = Calendars.CONTENT_URI;
+
+        String selection = "(" + CalendarColumns.access_level + " = ?)";
+
+        String[] selectionArgs = new String[] {String.valueOf(Calendars.CAL_ACCESS_OWNER)};
+
+        // Submit the query and get a Cursor object back. 
+        cur = cr.query(uri, CalendarColumns.names, selection, selectionArgs, null);
+        return cur;
+    }
+
 
     /** Is there an event in the specified calendar that hasn't been finished yet?
      *
